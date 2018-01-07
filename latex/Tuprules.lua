@@ -47,6 +47,8 @@ function latexmk(options)
 	local command = "env SOURCE_DATE_EPOCH="..quote(tostring(source_epoch)).." USER=author"
 	if options.latex == nil or options.latex == "xelatex" then
 		command = command.." latexmk -pdf -xelatex -output-directory="..quote(outdir).." -jobname=result "..quote(texfile)
+	elseif options.latex == "lualatex" then
+		command = command.." latexmk -lualatex -output-directory="..quote(outdir).." -jobname=result "..quote(texfile)
 	elseif options.latex == "pdflatex" then
 		command = command.." latexmk -pdf -output-directory="..quote(outdir).." -jobname=result "..quote(texfile)
 	else
