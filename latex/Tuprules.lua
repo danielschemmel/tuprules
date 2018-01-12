@@ -139,7 +139,7 @@ function pdfcompress(options)
 	local result = outdir..'/'..output
 	tup.definerule{
 		inputs = {input},
-		command = "^o Compressing %f^ gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages -dCompressFonts=true -sOutputFile="..quote(result).." "..quote(input),
+		command = "^o Compressing %f^ gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages -dCompressFonts=true -dAutoRotatePages=/None -sOutputFile="..quote(result).." "..quote(input),
 		outputs = {result}
 	}
 	local outputs = {output}
@@ -164,7 +164,7 @@ function pdfgreyscale(options)
 	local result = outdir..'/'..output
 	tup.definerule{
 		inputs = {input},
-		command = "^o Creating greyscale version of %f^ gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages -dCompressFonts=true -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -sOutputFile="..quote(result).." "..quote(input),
+		command = "^o Creating greyscale version of %f^ gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages -dCompressFonts=true -dAutoRotatePages=/None -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -sOutputFile="..quote(result).." "..quote(input),
 		outputs = {result}
 	}
 	local outputs = {output}
