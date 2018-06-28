@@ -166,9 +166,35 @@ function pdfcompress(options)
 		assert(type(options.build_group) == "string")
     table.insert(results, options.build_group)
 	end
+	if options.method ~= nil then
+		assert(type(options.method) == "table")
+		method = options.method
+	else
+		method = { "ghostscript" }
+	end
+	local last_stage = input
+	for k,v in ipairs(method) do
+		local next_stage = outdir.."/stage_"..tostring(k)..".pdf"
+		if v == "ghostscript" or v == "gs" then
+			tup.definerule{
+				inputs = { last_stage },
+				command = "^o Compressing (1: GS) %f^ gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages -dCompressFonts=true -dAutoRotatePages=/None -sOutputFile="..quote(next_stage:gsub("%%", "%%%%")).." "..quote(last_stage),
+				outputs = { quote_output(next_stage) },
+			}
+		elseif v == "pdfsizeopt" or v == "pso" then
+			tup.definerule{
+				inputs = { last_stage },
+				command = "^o Compressing ("..k..": PDFSIZEOPT) %f^ pdfsizeopt "..quote(last_stage).." "..quote(next_stage).." >"..quote(next_stage..".log").." 2>&1",
+				outputs = { quote_output(next_stage), quote_output(next_stage..".log") },
+			}
+		else
+			assert(false, "unknown compression method "..v)
+		end
+		last_stage = next_stage
+	end
 	tup.definerule{
-		inputs = {input},
-		command = "^o Compressing %f^ gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages -dCompressFonts=true -dAutoRotatePages=/None -sOutputFile="..quote(result:gsub("%%", "%%%%")).." "..quote(input),
+		inputs = { last_stage },
+		command = "^o Preparing Well-Known Result %f^ cp "..quote(last_stage).." "..quote(result),
 		outputs = results,
 	}
 	local outputs = { quote_output(output) }
