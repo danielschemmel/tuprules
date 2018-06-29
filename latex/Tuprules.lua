@@ -194,7 +194,7 @@ function pdfcompress(options)
 	end
 	tup.definerule{
 		inputs = { last_stage },
-		command = "^o Preparing Well-Known Result %f^ cp "..quote(last_stage).." "..quote(result),
+		command = "^o Preparing Well-Known Result %o^ cp "..quote(last_stage).." "..quote(result),
 		outputs = results,
 	}
 	local outputs = { quote_output(output) }
